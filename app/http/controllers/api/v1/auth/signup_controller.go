@@ -4,6 +4,7 @@ import (
 	"fmt"
 	v1 "forum/app/http/controllers/api"
 	"forum/app/models/user"
+	"forum/app/requests"
 	"github.com/gin-gonic/gin"
 	"net/http"
 )
@@ -30,6 +31,16 @@ func (sc *SignupController) IsPhoneExist(c *gin.Context) {
 		// Print Error Message
 		fmt.Println(err.Error())
 		// Exit request
+		return
+	}
+
+	// Validate
+	errs := requests.ValidateSignupPhoneExist(&request, c)
+	if len(errs) > 0 {
+		// 验证失败，返回 422 状态码以及错误信息
+		c.AbortWithStatusJSON(http.StatusUnprocessableEntity, gin.H{
+			"errors": errs,
+		})
 		return
 	}
 
