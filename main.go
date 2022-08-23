@@ -4,9 +4,14 @@ import (
 	"fmt"
 
 	"forum/bootstrap"
+	btsConfig "forum/config"
 
 	"github.com/gin-gonic/gin"
 )
+
+func init() {
+	btsConfig.Initialize()
+}
 
 func main() {
 
