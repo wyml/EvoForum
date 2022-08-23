@@ -6,7 +6,6 @@ import (
 	"forum/bootstrap"
 	btsConfig "forum/config"
 	"forum/pkg/config"
-
 	"github.com/gin-gonic/gin"
 )
 
