@@ -1,7 +1,6 @@
 package auth
 
 import (
-	"fmt"
 	v1 "forum/app/http/controllers/api"
 	"forum/app/models/user"
 	"forum/app/requests"
@@ -17,31 +16,13 @@ type SignupController struct {
 // IsPhoneExist 检测手机号是否已注册
 func (sc *SignupController) IsPhoneExist(c *gin.Context) {
 
-	// 初始化请求对象
+	// 获取请求参数，并做验证
 	request := requests.SignupPhoneExistRequest{}
-
-	// 解析 JSON 请求
-	if err := c.ShouldBindJSON(&request); err != nil {
-		// 解析失败，返回 422 状态码以及错误信息
-		c.AbortWithStatusJSON(http.StatusUnprocessableEntity, gin.H{
-			"error": err.Error(),
-		})
-		// Print Error Message
-		fmt.Println(err.Error())
-		// Exit request
+	if ok := requests.Validate(c, &request, requests.SignupPhoneExist); !ok {
 		return
 	}
 
-	// Validate
-	errs := requests.ValidateSignupPhoneExist(&request, c)
-	if len(errs) > 0 {
-		// 验证失败，返回 422 状态码以及错误信息
-		c.AbortWithStatusJSON(http.StatusUnprocessableEntity, gin.H{
-			"errors": errs,
-		})
-		return
-	}
-
+	// 检查数据库数据并返回
 	c.JSONP(http.StatusOK, gin.H{
 		"exist": user.IsPhoneExist(request.Phone),
 	})
@@ -50,31 +31,8 @@ func (sc *SignupController) IsPhoneExist(c *gin.Context) {
 // IsEmailExist 检测邮箱是否已注册
 func (sc *SignupController) IsEmailExist(c *gin.Context) {
 
-	// 请求对象
-	type PhoneExistRequest struct {
-		Email string `json:"email"`
-	}
 	request := requests.SignupEmailExistRequest{}
-
-	// 解析 JSON 请求
-	if err := c.ShouldBindJSON(&request); err != nil {
-		// 解析失败，返回 422 状态码以及错误信息
-		c.AbortWithStatusJSON(http.StatusUnprocessableEntity, gin.H{
-			"error": err.Error(),
-		})
-		// Print Error Message
-		fmt.Println(err.Error())
-		// Exit request
-		return
-	}
-
-	// Validate
-	errs := requests.ValidateSignupEmailExist(&request, c)
-	if len(errs) > 0 {
-		// 验证失败，返回 422 状态码以及错误信息
-		c.AbortWithStatusJSON(http.StatusUnprocessableEntity, gin.H{
-			"errors": errs,
-		})
+	if ok := requests.Validate(c, &request, requests.SignupEmailExist); !ok {
 		return
 	}
 
