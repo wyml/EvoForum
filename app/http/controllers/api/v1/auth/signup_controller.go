@@ -30,7 +30,6 @@ func (sc *SignupController) IsPhoneExist(c *gin.Context) {
 
 // IsEmailExist 检测邮箱是否已注册
 func (sc *SignupController) IsEmailExist(c *gin.Context) {
-
 	request := requests.SignupEmailExistRequest{}
 	if ok := requests.Validate(c, &request, requests.SignupEmailExist); !ok {
 		return
