@@ -28,7 +28,7 @@ func (s *RedisStore) Set(key string, value string) error {
 	return nil
 }
 
-/ Get 实现 base64Captcha.Store interface 的 Get 方法
+// Get 实现 base64Captcha.Store interface 的 Get 方法
 func (s *RedisStore) Get(key string, clear bool) string {
 	key = s.KeyPrefix + key
 	val := s.RedisClient.Get(key)

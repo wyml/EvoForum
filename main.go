@@ -3,10 +3,9 @@ package main
 import (
 	"flag"
 	"fmt"
-	"forum/pkg/config"
-
 	"forum/bootstrap"
 	btsConfig "forum/config"
+	"forum/pkg/config"
 
 	"github.com/gin-gonic/gin"
 )
