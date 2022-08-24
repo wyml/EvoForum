@@ -39,7 +39,7 @@ func VerifyCodePhone(data interface{}, c *gin.Context) map[string][]string {
 
 	// 图片验证码
 	_data := data.(*VerifyCodePhoneRequest)
-	errs = validators.ValidateCapthca(_data.CaptchaID, _data.CaptchaAnswer, errs)
+	errs = validators.ValidateCaptcha(_data.CaptchaID, _data.CaptchaAnswer, errs)
 
 	return errs
 }
@@ -82,7 +82,7 @@ func VerifyCodeEmail(data interface{}, c *gin.Context) map[string][]string {
 
 	// 图片验证码
 	_data := data.(*VerifyCodeEmailRequest)
-	errs = validators.ValidateCapthca(_data.CaptchaID, _data.CaptchaAnswer, errs)
+	errs = validators.ValidateCaptcha(_data.CaptchaID, _data.CaptchaAnswer, errs)
 
 	return errs
 }

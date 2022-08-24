@@ -1,6 +1,10 @@
 package user
 
-import "forum/app/models"
+import (
+	"forum/app/models"
+	"forum/pkg/database"
+	"forum/pkg/hash"
+)
 
 // User 用户模型
 type User struct {
@@ -12,4 +16,14 @@ type User struct {
 	Password string `json:"-"`
 
 	models.CommonTimestampsField
+}
+
+// Create 创建用户，通过 User.ID 来判断是否创建成功
+func (u *User) Create() {
+	database.DB.Create(&u)
+}
+
+// ComparePassword 密码是否正确
+func (u *User) ComparePassword(_password string) bool {
+	return hash.BcryptCheck(_password, u.Password)
 }
