@@ -4,6 +4,8 @@ import (
 	"forum/app/http/controllers/api/v1/auth"
 	"forum/app/http/middlewares"
 	"github.com/gin-gonic/gin"
+
+	controllers "forum/app/http/controllers/api/v1"
 )
 
 // RegisterAPIRoutes 注册 API 相关路由
@@ -48,5 +50,10 @@ func RegisterAPIRoutes(r *gin.Engine) {
 			// 图片验证码
 			authGroup.POST("/verify-codes/captcha", middlewares.LimitPerRoute("50-H"), vcc.ShowCaptcha)
 		}
+
+		uc := new(controllers.UsersController)
+
+		// 获取当前用户
+		v1.GET("/user", middlewares.AuthJWT(), uc.CurrentUser)
 	}
 }
