@@ -23,6 +23,8 @@ func RegisterAPIRouters(r *gin.Engine) {
 			authGroup.POST("/verify-codes/captcha", vcc.ShowCaptcha)
 			// 短信验证码
 			authGroup.POST("/verify-codes/phone", vcc.SendUsingPhone)
+			// 邮箱验证码
+			authGroup.POST("/verify-codes/email", vcc.SendUsingEmail)
 		}
 	}
 }
