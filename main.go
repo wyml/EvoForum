@@ -6,6 +6,7 @@ import (
 	"forum/bootstrap"
 	btsConfig "forum/config"
 	"forum/pkg/config"
+	"forum/pkg/verifycode"
 	"github.com/gin-gonic/gin"
 )
 
@@ -39,6 +40,8 @@ func main() {
 	bootstrap.SetupRedis()
 	// 初始化路由绑定
 	bootstrap.SetupRoute(router)
+
+	verifycode.NewVerifyCode().SendSMS("19378185057")
 
 	// 运行服务
 	err := router.Run(":" + config.Get("app.port"))
