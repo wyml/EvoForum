@@ -2,9 +2,11 @@ package auth
 
 import (
 	v1 "forum/app/http/controllers/api"
+	"forum/app/requests"
 	"forum/pkg/captcha"
 	"forum/pkg/logger"
 	"forum/pkg/response"
+	"forum/pkg/verifycode"
 	"github.com/gin-gonic/gin"
 )
 
@@ -23,4 +25,20 @@ func (vc *VerifyCodeController) ShowCaptcha(c *gin.Context) {
 		"captcha_id":    id,
 		"captcha_image": b64s,
 	})
+}
+
+func (vc *VerifyCodeController) SendUsingPhone(c *gin.Context) {
+
+	// 1. 验证表单
+	request := requests.VerifyCodePhoneRequest{}
+	if ok := requests.Validate(c, &request, requests.VerifyCodePhone); !ok {
+		return
+	}
+
+	// 2. 发送 SMS
+	if ok := verifycode.NewVerifyCode().SendSMS(request.Phone); !ok {
+		response.Abort500(c, "发送短信失败")
+	} else {
+		response.Success(c)
+	}
 }

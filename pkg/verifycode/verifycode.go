@@ -73,7 +73,7 @@ func (vc *VerifyCode) generateVerifyCode(key string) string {
 		code = config.GetString("verifycode.debug_code")
 	}
 
-	logger.DebugJSON("验证码", "生产验证码", map[string]string{key: code})
+	logger.DebugJSON("验证码", "生成验证码", map[string]string{key: code})
 
 	// 将验证码以及 KEY 存放到 Redis 中并设置过期时间
 	vc.Store.Set(key, code)
