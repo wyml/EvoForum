@@ -12,7 +12,7 @@ import (
 func SetupRoute(router *gin.Engine) {
 	registerGlobalMiddleware(router)
 
-	routes.RegisterAPIRouters(router)
+	routes.RegisterAPIRoutes(router)
 
 	setup404Handler(router)
 }

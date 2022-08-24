@@ -6,6 +6,8 @@ import (
 	"io"
 	"reflect"
 	"time"
+
+	mathrand "math/rand"
 )
 
 // Empty 类似 PHP EMPTY 函数
@@ -49,6 +51,25 @@ func RandomNumber(length int) string {
 	}
 	for i := 0; i < len(b); i++ {
 		b[i] = table[int(b[i])%len(table)]
+	}
+	return string(b)
+}
+
+// FirstElement 安全地获取 args[0]，避免 panic: runtime error: index out of range
+func FirstElement(args []string) string {
+	if len(args) > 0 {
+		return args[0]
+	}
+	return ""
+}
+
+// RandomString 生成长度为 length 的随机字符串
+func RandomString(length int) string {
+	mathrand.Seed(time.Now().UnixNano())
+	letters := "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890"
+	b := make([]byte, length)
+	for i := range b {
+		b[i] = letters[mathrand.Intn(len(letters))]
 	}
 	return string(b)
 }

@@ -4,6 +4,7 @@ import (
 	v1 "forum/app/http/controllers/api"
 	"forum/app/models/user"
 	"forum/app/requests"
+	"forum/pkg/jwt"
 	"forum/pkg/response"
 	"github.com/gin-gonic/gin"
 )
@@ -36,10 +37,11 @@ func (sc *SignupController) IsEmailExist(c *gin.Context) {
 	}
 
 	response.JSON(c, gin.H{
-		"exist": user.IsPhoneExist(request.Email),
+		"exist": user.IsEmailExist(request.Email),
 	})
 }
 
+// SignupUsingPhone 使用手机+短信验证码进行注册
 func (sc *SignupController) SignupUsingPhone(c *gin.Context) {
 
 	request := requests.SignupUsingPhoneRequest{}
@@ -47,16 +49,45 @@ func (sc *SignupController) SignupUsingPhone(c *gin.Context) {
 		return
 	}
 
-	_user := user.User{
+	userModel := user.User{
 		Name:     request.Name,
 		Phone:    request.Phone,
 		Password: request.Password,
 	}
-	_user.Create()
+	userModel.Create()
 
-	if _user.ID > 0 {
+	if userModel.ID > 0 {
+		token := jwt.NewJWT().IssueToken(userModel.GetStringID(), userModel.Name)
 		response.CreatedJSON(c, gin.H{
-			"data": _user,
+			"token": token,
+			"data":  userModel,
+		})
+	} else {
+		response.Abort500(c, "创建用户失败，请稍后尝试~")
+	}
+}
+
+// SignupUsingEmail 使用邮箱+验证码进行注册
+func (sc *SignupController) SignupUsingEmail(c *gin.Context) {
+
+	request := requests.SignupUsingEmailRequest{}
+	if ok := requests.Validate(c, &request, requests.SignupUsingEmail); !ok {
+		return
+	}
+
+	// 2. 验证成功，创建数据
+	userModel := user.User{
+		Name:     request.Name,
+		Email:    request.Email,
+		Password: request.Password,
+	}
+	userModel.Create()
+
+	if userModel.ID > 0 {
+		token := jwt.NewJWT().IssueToken(userModel.GetStringID(), userModel.Name)
+		response.CreatedJSON(c, gin.H{
+			"token": token,
+			"data":  userModel,
 		})
 	} else {
 		response.Abort500(c, "创建用户失败，请稍后尝试~")
