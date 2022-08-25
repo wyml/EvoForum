@@ -3,6 +3,7 @@ package v1
 import (
 	v1 "forum/app/http/controllers/api"
 	"forum/app/models/user"
+	"forum/app/requests"
 	"forum/pkg/auth"
 	"forum/pkg/response"
 
@@ -19,6 +20,14 @@ func (u *UsersController) CurrentUser(c *gin.Context) {
 }
 
 func (u *UsersController) Index(c *gin.Context) {
-	data := user.All()
-	response.Data(c, data)
+	request := requests.PaginationRequest{}
+	if ok := requests.Validate(c, &request, requests.Pagination); !ok {
+		return
+	}
+	
+	data, pager := user.Paginate(c, 10)
+	response.JSON(c, gin.H{
+		"data":  data,
+		"pager": pager,
+	})
 }
